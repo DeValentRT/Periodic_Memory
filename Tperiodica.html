@@ -1,0 +1,33 @@
+﻿<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Juego Tperiodica</title>
+    <link rel="stylesheet" href="Tperiodica.css">
+</head>
+<body>
+    <div class="game-container">
+        <!-- Botón de cerrar -->
+        <img src="button_1.png" class="close-btn" alt="Cerrar">
+        
+        <!-- Barra de tiempo -->
+        <img id="time-bar" class="time-bar" alt="Barra de Tiempo"> 
+
+    <div class="ayudas-container">
+        <img id="ayuda-nombre" class="ayuda-nombre-elemento" style="display: none;">
+        <img id="ayuda-familia" class="ayuda-familia" style="display: none;">
+        <img id="ayuda-grupo" class="ayuda-grupo" style="display: none;">
+    </div>
+        
+        <!-- Contenido del juego -->
+        <div class="game-content"></div>
+    </div>
+    <script src="gameData.js"></script>
+    <script src="tableroManager.js"></script>
+    <script src="elementData.js"></script>
+    <script src="gameLogic.js"></script>
+    <script src="gameManager.js"></script>
+    <script src="Tperiodica.js"></script>
+</body>
+</html>
