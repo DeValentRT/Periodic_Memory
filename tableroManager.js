@@ -3,13 +3,19 @@ document.addEventListener('DOMContentLoaded', () => {
     // 1. Configuración inicial
     const gameContainer = document.querySelector('.game-container');
     const nivel = obtenerNivelDeURL();
-    
+
     // Guardar nivel en ámbito global para otros archivos
     window.nivelActual = nivel;
 
+    // ✅ Fondo dinámico según nivel (antes de cargar tablero)
+    const fondoRuta = (nivel === 13 || nivel === 14)
+        ? 'fondo/2.png'
+        : 'fondo/1.png';
+    gameContainer.style.backgroundImage = `url('${fondoRuta}')`;
+
     // 2. Cargar tablero
     cargarTablero(nivel);
-    
+
     // 3. Cargar casillas del nivel (usa window.casillasPorNivel de gameData.js)
     cargarCasillas(nivel, gameContainer);
 });
@@ -18,7 +24,7 @@ document.addEventListener('DOMContentLoaded', () => {
 function obtenerNivelDeURL() {
     const urlParams = new URLSearchParams(window.location.search);
     let nivel = parseInt(urlParams.get('level')) || 1;
-    return Math.max(1, Math.min(11, nivel)); // Asegurar que esté entre 1-11
+    return Math.max(1, Math.min(15, nivel)); // Asegurar que esté entre 1-15
 }
 
 // Función para cargar la imagen del tablero
@@ -32,15 +38,13 @@ function cargarTablero(nivel) {
 
 // Función para crear las casillas interactivas
 function cargarCasillas(nivel, gameContainer) {
-    // Accedemos a los datos desde el objeto global
     const casillasNivel = window.casillasPorNivel[nivel]?.casillas || [];
-    
+
     casillasNivel.forEach(casilla => {
         const casillaElement = document.createElement('div');
         casillaElement.className = 'casilla-elemento';
         casillaElement.dataset.id = casilla.id;
-        
-        // Posicionamiento y estilo
+
         Object.assign(casillaElement.style, {
             position: 'absolute',
             left: `${casilla.x}px`,
@@ -53,8 +57,7 @@ function cargarCasillas(nivel, gameContainer) {
             cursor: 'pointer'
         });
 
-        // Nota: La verificación de clics ahora se manejará en gameLogic.js
-        // Este evento es solo para debugging
+        // Evento de clic solo para debugging
         casillaElement.addEventListener('click', () => {
             console.log(`Casilla clickeada: ${casilla.id}`);
         });

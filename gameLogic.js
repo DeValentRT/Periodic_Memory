@@ -63,20 +63,37 @@
     // 5. Crear fondo de ayuda (solo para dificultad fácil)
     function crearFondoAyuda() {
         const dificultad = obtenerDificultadDeURL();
+        const nivelActual = obtenerNivelDeURL(); // Asegúrate de que esta función devuelva número
+
         if (dificultad === 1) {
             fondoAyuda = document.createElement('img');
             fondoAyuda.id = 'fondo-ayuda';
-            fondoAyuda.src = 'fondo/grupo.png';
-            fondoAyuda.style.cssText = `
-                position: absolute;
-                top: 0;
-                left: 0;
-                width: 240px;
-                height: 135px;
-                z-index: 5;
-                pointer-events: none;
-            `;
-            document.querySelector('.game-container').prepend(fondoAyuda);
+
+            let rutaFondo;
+     
+            if (nivelActual >= 1 && nivelActual <= 11 || nivelActual === 15) {
+                rutaFondo = 'fondo/grupo.png';
+            } else if (nivelActual === 12) {
+                rutaFondo = 'fondo/grupo1.png';
+            } else if (nivelActual === 13 || nivelActual === 14) {
+                rutaFondo = 'fondo/grupo2.png';
+            } else {
+                rutaFondo = ''; // Si no aplica, puedes dejar vacío o ocultar
+            }
+
+            if (rutaFondo) {
+                fondoAyuda.src = rutaFondo;
+                fondoAyuda.style.cssText = `
+                    position: absolute;
+                    top: 0;
+                    left: 0;
+                    width: 240px;
+                    height: 135px;
+                    z-index: 5;
+                    pointer-events: none;
+                `;
+                document.querySelector('.game-container').prepend(fondoAyuda);
+            }
         }
     }
 
@@ -109,36 +126,69 @@
 
     // 7. Mostrar/ocultar ayudas según dificultad
     function mostrarAyudasSegunDificultad(elementoId) {
-        const dificultad = obtenerDificultadDeURL();
-        const elementoInfo = window.elementData[elementoId];
-        
-        ocultarAyudasVisuales();
+      const dificultad = obtenerDificultadDeURL(); // 1=fácil, 2=medio, 3=difícil
+      const elementoInfo = window.elementData[elementoId];
+      const nivelActual = window.nivelActual;
 
-        if (!elementoInfo) return;
+      ocultarAyudasVisuales();
+      if (!elementoInfo) return;
 
-        if (dificultad === 1) {
-            document.getElementById('ayuda-nombre').src = `elemento/${elementoInfo.nombre}.png`;
-            document.getElementById('ayuda-familia').src = `familia/${elementoInfo.familia}.png`;
-            document.getElementById('ayuda-grupo').src = `grupo/${elementoInfo.grupo}.png`;
-            
-            document.getElementById('ayuda-nombre').style.display = 'block';
-            document.getElementById('ayuda-familia').style.display = 'block';
-            document.getElementById('ayuda-grupo').style.display = 'block';
-            
-            if (fondoAyuda) fondoAyuda.style.display = 'block';
+      const ayudaNombre = document.getElementById("ayuda-nombre");
+      const ayudaFamilia = document.getElementById("ayuda-familia");
+      const ayudaGrupo = document.getElementById("ayuda-grupo");
+
+      // 🧭 Posiciones personalizadas para niveles 13 y 14
+      if (nivelActual === 13 || nivelActual === 14) {
+        ayudaNombre.style.left = "143px";
+        ayudaNombre.style.top = "8px";
+        ayudaFamilia.style.left = "142px";
+        ayudaFamilia.style.top = "23px";
+      } else {
+        // Posiciones estándar por defecto (CSS o layout general)
+        ayudaNombre.style.right = "0";
+        ayudaNombre.style.top = "32px";
+        ayudaFamilia.style.right = "0";
+        ayudaFamilia.style.bottom = "7px";
+      }
+
+      // 🧩 Lógica por dificultad
+      if (dificultad === 1) { // fácil: nombre + familia
+        ayudaNombre.src = `elemento/${elementoInfo.nombre}.png`;
+        ayudaFamilia.src = `familia/${elementoInfo.familia}.png`;
+    
+        ayudaNombre.style.display = "block";
+        ayudaFamilia.style.display = "block";
+
+        // Solo mostrar grupo si no es nivel 13 ni 14
+        if (nivelActual !== 13 && nivelActual !== 14) {
+          ayudaGrupo.src = `grupo/${elementoInfo.grupo}.png`;
+          ayudaGrupo.style.display = "block";
+        } else {
+          ayudaGrupo.style.display = "none";
+        }
+
+        if (fondoAyuda) fondoAyuda.style.display = "block";
+      } else if (dificultad === 2) { // medio: solo nombre
+        ayudaNombre.src = `elemento/${elementoInfo.nombre}.png`;
+    
+        ayudaNombre.style.display = "block";
+
+        // Solo mostrar grupo si no es nivel 13 ni 14
+        if (nivelActual !== 13 && nivelActual !== 14) {
+          ayudaFamilia.src = `familia/${elementoInfo.familia}.png`;
+          ayudaFamilia.style.display = "block";
+        } else {
+          ayudaFamilia.style.display = "none";
         } 
-        else if (dificultad === 2) {
-            document.getElementById('ayuda-nombre').src = `elemento/${elementoInfo.nombre}.png`;
-            document.getElementById('ayuda-familia').src = `familia/${elementoInfo.familia}.png`;
-            
-            document.getElementById('ayuda-nombre').style.display = 'block';
-            document.getElementById('ayuda-familia').style.display = 'block';
-            
-            if (fondoAyuda) fondoAyuda.style.display = 'none';
-        }
-        else {
-            if (fondoAyuda) fondoAyuda.style.display = 'none';
-        }
+    
+        ayudaGrupo.style.display = "none";
+        if (fondoAyuda) fondoAyuda.style.display = "none";
+      } else { // difícil: ninguna ayuda
+        ayudaNombre.style.display = "none";
+        ayudaFamilia.style.display = "none";
+        ayudaGrupo.style.display = "none";
+        if (fondoAyuda) fondoAyuda.style.display = "none";
+      }
     }
 
     // 8. Ocultar ayudas visuales
@@ -146,12 +196,6 @@
         document.getElementById('ayuda-nombre').style.display = 'none';
         document.getElementById('ayuda-familia').style.display = 'none';
         document.getElementById('ayuda-grupo').style.display = 'none';
-    }
-
-    // 9. Ocultar todas las ayudas
-    function ocultarTodasLasAyudas() {
-        ocultarAyudasVisuales();
-        if (fondoAyuda) fondoAyuda.style.display = 'none';
     }
 
     // 10. Crear elemento persistente completado

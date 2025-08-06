@@ -1,12 +1,10 @@
 ﻿// gameManager.js
 document.addEventListener('DOMContentLoaded', () => {
-    // Variables globales
     const timeBar = document.getElementById('time-bar');
     const totalFrames = 33;
     let animationInterval = null;
     let juegoTerminado = false;
 
-    // Función pública para detener el tiempo
     window.detenerTemporizadorGlobal = function() {
         if (animationInterval) {
             clearInterval(animationInterval);
@@ -15,14 +13,12 @@ document.addEventListener('DOMContentLoaded', () => {
         juegoTerminado = true;
     };
 
-    // Precarga de imágenes
-    function precargarImagenes() {
+    function precargarImagenes(carpeta) {
         for (let i = 1; i <= totalFrames; i++) {
             const img = new Image();
-            img.src = `tiempo/${i}.png`;
+            img.src = `${carpeta}/${i}.png`;
         }
     }
-
     // Mostrar Ready-Go
     function mostrarReadyGo() {
         return new Promise((resolve) => {
@@ -109,16 +105,35 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Animación de la barra de tiempo
     async function iniciarJuego() {
-        precargarImagenes();
+        const nivel = window.nivelActual || 1;
+        const carpetaTiempo = (nivel === 13 || nivel === 14) ? 'time' : 'tiempo';
+
+        precargarImagenes(carpetaTiempo);
         await mostrarReadyGo();
-        
+
         const dificultad = obtenerDificultadDeURL();
-        const duraciones = { 1: 30000, 2: 18000, 3: 12000 };
+        const duraciones = { 1: 240000, 2: 36000, 3: 24000 };
         const velocidad = duraciones[dificultad] / totalFrames;
         let currentFrame = 1;
 
         timeBar.style.display = 'block';
-        timeBar.src = 'tiempo/1.png';
+        timeBar.src = `${carpetaTiempo}/1.png`;
+        timeBar.style.imageRendering = 'pixelated';
+        timeBar.style.pointerEvents = 'none';
+        timeBar.style.position = 'absolute';
+        timeBar.style.zIndex = '25';
+
+        if (nivel === 13 || nivel === 14) {
+            timeBar.style.width = '96px';
+            timeBar.style.height = '16px';
+            timeBar.style.left = '136px';
+            timeBar.style.top = '40px';
+        } else {
+            timeBar.style.width = '16px';
+            timeBar.style.height = '96px';
+            timeBar.style.left = '2px';
+            timeBar.style.bottom = '13px';
+        }
 
         animationInterval = setInterval(() => {
             if (juegoTerminado) {
@@ -129,15 +144,15 @@ document.addEventListener('DOMContentLoaded', () => {
             currentFrame++;
             if (currentFrame > totalFrames) {
                 clearInterval(animationInterval);
-                timeBar.src = 'tiempo/33.png';
+                timeBar.src = `${carpetaTiempo}/33.png`;
                 mostrarTiempoAgotado();
                 return;
             }
-            timeBar.src = `tiempo/${currentFrame}.png`;
+
+            timeBar.src = `${carpetaTiempo}/${currentFrame}.png`;
         }, velocidad);
     }
 
-    // Iniciar juego
     if (timeBar) iniciarJuego();
 });
 
