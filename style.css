@@ -4,6 +4,7 @@
     box-sizing: border-box;
     image-rendering: pixelated;
     image-rendering: crisp-edges;
+    -webkit-tap-highlight-color: transparent;
 }
 
 body {
@@ -14,6 +15,7 @@ body {
     justify-content: center;
     align-items: center;
     background-color: #000;
+    touch-action: manipulation;
 }
 
 .game-container {
@@ -61,22 +63,28 @@ body {
 /* Botones de niveles */
 .level-button {
     position: absolute;
-    width: 26px;
-    height: 26px;
+    width: 30px;
+    height: 30px;
     border-radius: 50%;
     transform: translate(-50%, -50%);
     cursor: pointer;
     z-index: 150;
     pointer-events: auto;
+    touch-action: manipulation;
+    margin-left: -2px;
+    margin-top: -2px;
+    background-color: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
 }
 
 .level-button:not(.locked) {
-    background-color: rgba(0, 255, 0, 0.3); /* Verde para desbloqueados */
+    background-color: rgba(0, 255, 0, 0.3);
 }
 
 .level-button.locked {
-    background-color: rgba(255, 0, 0, 0.3); /* Rojo para bloqueados */
-    pointer-events: none; /* No clicks en niveles bloqueados */
+    background-color: rgba(255, 0, 0, 0.3);
+    pointer-events: none;
 }
 
 /* Botones de dificultad */
@@ -87,7 +95,8 @@ body {
     height: 16px;
     cursor: pointer;
     z-index: 300;
-    pointer-events: auto !important; /* Forzar interactividad */
+    pointer-events: auto !important;
+    touch-action: manipulation;
 }
 
 #difficulty-1 { top: 33px; }

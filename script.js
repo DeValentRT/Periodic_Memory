@@ -74,7 +74,6 @@ document.addEventListener('DOMContentLoaded', function () {
         document.getElementById('estrella-dificil').src = datos.dificil ? 'estrellas/3.png' : 'estrellas/0.png';
     }
 
-
     // 2. Crear botones de nivel
     function initLevelButtons() {
         const levelSelect = document.querySelector('.level-select');
@@ -89,7 +88,7 @@ document.addEventListener('DOMContentLoaded', function () {
             btn.addEventListener('click', () => {
                 if (button.unlocked) {
                     window.currentLevelId = button.id;
-                    actualizarEstrellasDelNivel(button.id); // 🟦 Actualiza estrellas
+                    actualizarEstrellasDelNivel(button.id);
                 }
             });
 
@@ -170,10 +169,10 @@ document.addEventListener('DOMContentLoaded', function () {
     setInterval(updateLevelName, 100);
 
     resizeGame();
-    insertarEstrellasFijas(); // 🟨 Inicia las estrellas
+    insertarEstrellasFijas();
     initLevelButtons();
     window.updateProgressVisual();
-    actualizarEstrellasDelNivel(window.currentLevelId); // 🟦 Inicializa estrellas al cargar
+    actualizarEstrellasDelNivel(window.currentLevelId);
 
     window.addEventListener('resize', resizeGame);
     document.addEventListener('gesturestart', e => e.preventDefault());

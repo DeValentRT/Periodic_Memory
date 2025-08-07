@@ -19,6 +19,7 @@ document.addEventListener('DOMContentLoaded', () => {
             img.src = `${carpeta}/${i}.png`;
         }
     }
+
     // Mostrar Ready-Go
     function mostrarReadyGo() {
         return new Promise((resolve) => {
@@ -112,7 +113,17 @@ document.addEventListener('DOMContentLoaded', () => {
         await mostrarReadyGo();
 
         const dificultad = obtenerDificultadDeURL();
-        const duraciones = { 1: 240000, 2: 36000, 3: 24000 };
+        
+        // Definir los tiempos según el nivel
+        let duraciones;
+        if (nivel === 15) {
+            // Tiempos especiales para el nivel 15
+            duraciones = { 1: 120000, 2: 90000, 3: 40000 };
+        } else {
+            // Tiempos normales para otros niveles
+            duraciones = { 1: 40000, 2: 20000, 3: 12000 };
+        }
+        
         const velocidad = duraciones[dificultad] / totalFrames;
         let currentFrame = 1;
 
